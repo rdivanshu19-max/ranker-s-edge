@@ -9,6 +9,9 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { AuthProvider } from "@/hooks/use-auth";
+import { SiteNav, SiteFooter } from "@/components/site-nav";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -72,14 +75,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Test Rankers — Practice PYQs. Crack JEE." },
+      { name: "description", content: "A focused JEE prep hub — PYQs, chapter tests, infinite Maths bank, and an AI tutor. No noise. Just practice." },
+      { name: "author", content: "GCD" },
+      { property: "og:title", content: "Test Rankers — Practice PYQs. Crack JEE." },
+      { property: "og:description", content: "Only PYQs. Only practice. Zero noise." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -113,7 +115,17 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <AuthProvider>
+        <div className="relative min-h-screen">
+          <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
+          <SiteNav />
+          <main className="relative pt-24">
+            <Outlet />
+          </main>
+          <SiteFooter />
+          <Toaster theme="dark" />
+        </div>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
