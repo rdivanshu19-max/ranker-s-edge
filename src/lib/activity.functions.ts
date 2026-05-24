@@ -1,27 +1,24 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { supabase } from "@/integrations/supabase/client";
 
-export const logActivity = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input) =>
-    z
-      .object({
-        resource_key: z.string().min(1).max(64),
-        path: z.string().max(512).optional(),
-      })
-      .parse(input),
-  )
-  .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-    const { error } = await supabase.from("activity_log").insert({
-      user_id: userId,
-      resource_key: data.resource_key,
-      path: data.path ?? null,
+/**
+ * Client-side activity tracking — works for both anon and signed-in users.
+ * RLS policy "Anyone can insert activity" allows either auth.uid() = user_id, or null.
+ */
+export async function trackActivity(resource_key: string, path?: string) {
+  try {
+    const { data: session } = await supabase.auth.getSession();
+    const user_id = session.session?.user.id ?? null;
+    await supabase.from("activity_log").insert({
+      user_id,
+      resource_key,
+      path: path ?? null,
     });
-    if (error) return { ok: false, error: error.message };
-    return { ok: true };
-  });
+  } catch {
+    /* tracking is best-effort */
+  }
+}
 
 export const updateLastLogin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

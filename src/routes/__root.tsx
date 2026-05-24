@@ -75,18 +75,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Test Rankers — Practice PYQs. Crack JEE." },
-      { name: "description", content: "A focused JEE prep hub — PYQs, chapter tests, infinite Maths bank, and an AI tutor. No noise. Just practice." },
+      { title: "Rankers Edge — Where dreams rise through the silence." },
+      { name: "description", content: "Rankers Edge is a cinematic JEE prep hub — PYQs, chapter mocks, an infinite Maths bank and an AI tutor. Built for deep thinkers and quiet rebels." },
       { name: "author", content: "GCD" },
-      { property: "og:title", content: "Test Rankers — Practice PYQs. Crack JEE." },
-      { property: "og:description", content: "Only PYQs. Only practice. Zero noise." },
+      { name: "theme-color", content: "#031a33" },
+      { property: "og:title", content: "Rankers Edge — Where dreams rise through the silence." },
+      { property: "og:description", content: "PYQs · Mocks · Infinite Maths · AI Tutor. The quiet edge for JEE aspirants." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:site_name", content: "Rankers Edge" },
+      { property: "og:image", content: "/rankers-edge-logo.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Rankers Edge — Where dreams rise through the silence." },
+      { name: "twitter:description", content: "PYQs · Mocks · Infinite Maths · AI Tutor." },
+      { name: "twitter:image", content: "/rankers-edge-logo.png" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/rankers-edge-logo.png" },
+      { rel: "apple-touch-icon", href: "/rankers-edge-logo.png" },
+    ],
+    scripts: [
       {
-        rel: "stylesheet",
-        href: appCss,
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "EducationalOrganization",
+          name: "Rankers Edge",
+          description: "Cinematic JEE prep hub — PYQs, mocks, infinite Maths and an AI tutor.",
+          logo: "/rankers-edge-logo.png",
+        }),
       },
     ],
   }),
@@ -112,17 +129,19 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  // Hide the floating top nav on full-bleed iframe routes (so it doesn't overlap)
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const hideChrome = pathname.startsWith("/resource/");
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <div className="relative min-h-screen">
-          <div className="absolute inset-0 grid-bg pointer-events-none" aria-hidden />
-          <SiteNav />
-          <main className="relative pt-24">
+          {!hideChrome && <SiteNav />}
+          <main className={hideChrome ? "" : "relative pt-24"}>
             <Outlet />
           </main>
-          <SiteFooter />
+          {!hideChrome && <SiteFooter />}
           <Toaster theme="dark" />
         </div>
       </AuthProvider>

@@ -3,7 +3,15 @@ import { motion } from "framer-motion";
 import { Mail, ExternalLink, Code, Sparkles, Box, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({ meta: [{ title: "About Developer — Test Rankers" }, { name: "description", content: "Hi, I'm GCD. I build practical, high-impact digital products including Test Rankers and Rankers Stars." }] }),
+  head: () => ({
+    meta: [
+      { title: "About — Rankers Edge" },
+      { name: "description", content: "Hi, I'm GCD. I build practical, high-impact digital products including Rankers Edge, Gravitas, Nexus CBT and Rankers Stars." },
+      { property: "og:title", content: "About — Rankers Edge" },
+      { property: "og:description", content: "Meet the developer behind Rankers Edge." },
+    ],
+    links: [{ rel: "canonical", href: "/about" }],
+  }),
   component: AboutPage,
 });
 
@@ -18,7 +26,7 @@ const platforms = [
   { name: "Rankers Stars", year: "First platform", desc: "AI platform for JEE aspirants — adaptive practice and analytics. Where the journey began.", url: "https://rankers-stars.vercel.app/app/" },
   { name: "Nexus CBT", year: "CBT testing", desc: "Computer-based testing platform built for institutes — clean UX, fast deployment.", url: "https://nexuscbt.vercel.app/" },
   { name: "Gravitas", year: "Modern platform", desc: "Sleek modern platform with a focus on motion and polished UI.", url: "https://gravitas-opal.vercel.app/" },
-  { name: "Test Rankers", year: "You're here", desc: "Focused JEE prep hub — only PYQs, only practice, zero noise.", url: "/" },
+  { name: "Rankers Edge", year: "You're here", desc: "Cinematic JEE prep hub — only PYQs, only practice, zero noise.", url: "/" },
 ];
 
 function AboutPage() {

@@ -6,9 +6,12 @@ import { RESOURCES } from "@/lib/resources";
 export const Route = createFileRoute("/resources")({
   head: () => ({
     meta: [
-      { title: "Study Resources — Test Rankers" },
-      { name: "description", content: "Eight hand-picked JEE prep tools — PYQs, chapter tests, mocks, infinite Maths bank, and an AI tutor." },
+      { title: "Study Resources — Rankers Edge" },
+      { name: "description", content: "Eight hand-picked JEE prep tools — PYQs, chapter tests, mocks, infinite Maths bank and an AI tutor." },
+      { property: "og:title", content: "Study Resources — Rankers Edge" },
+      { property: "og:description", content: "Eight tools, zero noise." },
     ],
+    links: [{ rel: "canonical", href: "/resources" }],
   }),
   component: ResourcesPage,
 });
@@ -22,7 +25,7 @@ function ResourcesPage() {
           Only PYQs. Only practice. <span className="text-gradient italic">Zero noise.</span>
         </h1>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-          Tap any tool to launch it inside Test Rankers. Your progress is yours.
+          Tap any tool to launch it inside Rankers Edge. Your progress is yours.
         </p>
       </div>
 

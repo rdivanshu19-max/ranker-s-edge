@@ -1,23 +1,29 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import ReactMarkdown from "react-markdown";
 import { Send, Brain } from "lucide-react";
 import { askTutor } from "@/lib/ai.functions";
-import { useAuth } from "@/hooks/use-auth";
+import { trackActivity } from "@/lib/activity.functions";
 import { toast } from "sonner";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
 export const Route = createFileRoute("/ai-tutor")({
   validateSearch: (s: Record<string, unknown>) => ({ q: (s.q as string) ?? "" }),
-  head: () => ({ meta: [{ title: "AI Tutor — Test Rankers" }, { name: "description", content: "Ask any JEE concept, problem, or derivation. Instant explanations." }] }),
+  head: () => ({
+    meta: [
+      { title: "AI Tutor — Rankers Edge" },
+      { name: "description", content: "Ask any JEE concept, problem or derivation — instant, step-by-step explanations." },
+      { property: "og:title", content: "AI Tutor — Rankers Edge" },
+      { property: "og:description", content: "JEE-grade answers, instantly." },
+    ],
+    links: [{ rel: "canonical", href: "/ai-tutor" }],
+  }),
   component: AITutor,
 });
 
 function AITutor() {
-  const { user, loading } = useAuth();
-  const nav = useNavigate();
   const { q } = Route.useSearch();
   const ask = useServerFn(askTutor);
   const [messages, setMessages] = useState<Msg[]>([]);
@@ -27,8 +33,8 @@ function AITutor() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!loading && !user) nav({ to: "/login", search: { redirect: "/ai-tutor" } });
-  }, [loading, user, nav]);
+    trackActivity("ai-tutor", "/ai-tutor");
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -55,22 +61,20 @@ function AITutor() {
   };
 
   useEffect(() => {
-    if (q && !sentInitial.current && user) {
+    if (q && !sentInitial.current) {
       sentInitial.current = true;
       send(q);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [q, user]);
-
-  if (loading || !user) return <div className="text-center text-muted-foreground py-20">Loading…</div>;
+  }, [q]);
 
   return (
     <div className="mx-auto max-w-3xl px-5 pb-10 flex flex-col h-[calc(100vh-7rem)]">
       <div className="text-center mb-4">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass text-xs">
-          <Brain className="size-3 text-primary" /> AI Tutor
+        <span className="liquid-glass rounded-full px-3 py-1 text-xs inline-flex items-center gap-1.5">
+          <Brain className="size-3" /> AI Tutor
         </span>
-        <h1 className="font-serif text-3xl mt-3">Ask anything — <span className="text-gradient italic">JEE-grade</span> answers.</h1>
+        <h1 className="font-serif text-4xl mt-3">Ask anything — <em className="not-italic silver-text">JEE-grade</em> answers.</h1>
       </div>
       <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-4 px-1">
         {messages.length === 0 && (

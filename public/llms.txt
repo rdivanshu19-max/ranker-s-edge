@@ -1,0 +1,24 @@
+# Rankers Edge
+
+> Cinematic JEE prep hub — PYQs, mocks, an infinite Maths question bank and an AI tutor. Built for deep thinkers and quiet rebels.
+
+Rankers Edge is a focused study platform for JEE Mains and JEE Advanced aspirants. It brings together previous-year question banks, full and chapter-wise mock tests, an infinite adaptive Maths drill, and an on-demand AI tutor — all behind a single calm interface.
+
+## Pages
+- [Home](/): Cinematic landing with an AI tutor search bar.
+- [Study Resources](/resources): Eight hand-picked JEE prep tools.
+- [AI Tutor](/ai-tutor): Ask any JEE concept, problem or derivation.
+- [About Developer](/about): The story behind Rankers Edge and the developer's other platforms.
+
+## Resources
+- [Infinity Question Bank](/resource/infinity-maths): Never-ending adaptive Maths drills.
+- [Chapter-wise Test Series](/resource/chapter-pyqs): Chapter-by-chapter PYQ practice.
+- [JEE Mains PYQ Series](/resource/jee-mains-pyq): Year-wise JEE Mains papers.
+- [JEE Advanced PYQ Series](/resource/jee-adv-pyq): Year-wise JEE Advanced archive.
+- [AI Personal Tutor](/resource/ai-teacher): Chapter-level AI tutor.
+- [JEE Mains Mocks](/resource/mains-mock-full): Institute-grade full mocks.
+- [JEE Mains Chapter Mocks](/resource/mains-mock-chapter): Non-PYQ chapter drilling.
+- [JEE Advanced Mocks](/resource/adv-mock-full): Pattern-true Advanced mocks.
+
+## Optional
+- [Sign in](/login): Optional account for saving progress.

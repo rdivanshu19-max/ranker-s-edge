@@ -61,10 +61,10 @@ function LoginPage() {
     <div className="mx-auto max-w-md px-5 py-10">
       <div className="glass rounded-3xl p-8 shadow-glow">
         <h1 className="font-serif text-4xl">
-          {mode === "signin" ? <>Welcome <span className="text-gradient italic">back</span></> : <>Join <span className="text-gradient italic">Test Rankers</span></>}
+          {mode === "signin" ? <>Welcome <span className="silver-text italic">back</span></> : <>Join <span className="silver-text italic">Rankers Edge</span></>}
         </h1>
         <p className="text-muted-foreground text-sm mt-2">
-          {mode === "signin" ? "Sign in to access your study resources." : "Free forever. No email verification."}
+          {mode === "signin" ? "Optional — Rankers Edge works without an account too." : "Free forever. Optional. No email verification."}
         </p>
         <form onSubmit={submit} className="mt-6 space-y-3">
           <input
