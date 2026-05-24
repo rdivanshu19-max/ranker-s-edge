@@ -1,9 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
+// Public — works for anon and authenticated users.
+// We resolve the user from the Supabase auth header if present, otherwise log as anonymous.
 export const logActivity = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
     z
       .object({
@@ -12,9 +14,15 @@ export const logActivity = createServerFn({ method: "POST" })
       })
       .parse(input),
   )
-  .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-    const { error } = await supabase.from("activity_log").insert({
+  .handler(async ({ data, request }) => {
+    let userId: string | null = null;
+    const authHeader = request?.headers.get("authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.slice(7);
+      const { data: u } = await supabaseAdmin.auth.getUser(token);
+      userId = u.user?.id ?? null;
+    }
+    const { error } = await supabaseAdmin.from("activity_log").insert({
       user_id: userId,
       resource_key: data.resource_key,
       path: data.path ?? null,

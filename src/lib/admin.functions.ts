@@ -79,11 +79,16 @@ export const listActivity = createServerFn({ method: "GET" })
       .order("created_at", { ascending: false })
       .limit(data.limit);
     if (error) throw new Error(error.message);
-    const ids = Array.from(new Set((rows ?? []).map((r) => r.user_id)));
+    const ids = Array.from(
+      new Set((rows ?? []).map((r) => r.user_id).filter((x): x is string => !!x)),
+    );
     const { data: profs } = await supabaseAdmin
       .from("profiles")
       .select("id, email")
       .in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
     const emailById = new Map((profs ?? []).map((p) => [p.id, p.email]));
-    return (rows ?? []).map((r) => ({ ...r, email: emailById.get(r.user_id) ?? "—" }));
+    return (rows ?? []).map((r) => ({
+      ...r,
+      email: r.user_id ? emailById.get(r.user_id) ?? "—" : "Anonymous",
+    }));
   });
