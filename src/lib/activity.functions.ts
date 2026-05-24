@@ -1,33 +1,33 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { supabase } from "@/integrations/supabase/client";
 
-// Public — works for anon and authenticated users.
-// We resolve the user from the Supabase auth header if present, otherwise log as anonymous.
-export const logActivity = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
-    z
-      .object({
-        resource_key: z.string().min(1).max(64),
-        path: z.string().max(512).optional(),
-      })
-      .parse(input),
-  )
-  .handler(async ({ data, request }) => {
-    let userId: string | null = null;
-    const authHeader = request?.headers.get("authorization");
-    if (authHeader?.startsWith("Bearer ")) {
-      const token = authHeader.slice(7);
-      const { data: u } = await supabaseAdmin.auth.getUser(token);
-      userId = u.user?.id ?? null;
-    }
-    const { error } = await supabaseAdmin.from("activity_log").insert({
-      user_id: userId,
-      resource_key: data.resource_key,
-      path: data.path ?? null,
+/**
+ * Client-side activity tracking — works for both anon and signed-in users.
+ * RLS policy "Anyone can insert activity" allows either auth.uid() = user_id, or null.
+ */
+export async function trackActivity(resource_key: string, path?: string) {
+  try {
+    const { data: session } = await supabase.auth.getSession();
+    const user_id = session.session?.user.id ?? null;
+    await supabase.from("activity_log").insert({
+      user_id,
+      resource_key,
+      path: path ?? null,
     });
-    if (error) return { ok: false, error: error.message };
+  } catch {
+    /* swallow — tracking is best-effort */
+  }
+}
+
+export const updateLastLogin = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabase, userId } = context;
+    await supabase
+      .from("profiles")
+      .update({ last_login_at: new Date().toISOString() })
+      .eq("id", userId);
     return { ok: true };
   });
 
