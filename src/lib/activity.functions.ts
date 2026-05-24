@@ -16,20 +16,9 @@ export async function trackActivity(resource_key: string, path?: string) {
       path: path ?? null,
     });
   } catch {
-    /* swallow — tracking is best-effort */
+    /* tracking is best-effort */
   }
 }
-
-export const updateLastLogin = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
-    const { supabase, userId } = context;
-    await supabase
-      .from("profiles")
-      .update({ last_login_at: new Date().toISOString() })
-      .eq("id", userId);
-    return { ok: true };
-  });
 
 export const updateLastLogin = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
