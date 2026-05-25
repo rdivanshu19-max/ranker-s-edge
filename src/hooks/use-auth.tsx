@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type AuthCtx = {
   session: Session | null;
@@ -24,6 +25,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Set up listener FIRST
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, s) => {
       setSession(s);
+      // Fire-and-forget ban check — do not await inside the callback
+      if (s?.user) {
+        setTimeout(() => {
+          supabase
+            .from("profiles")
+            .select("is_banned")
+            .eq("id", s.user.id)
+            .maybeSingle()
+            .then(({ data }) => {
+              if (data?.is_banned) {
+                supabase.auth.signOut();
+                toast.error("This account has been banned.");
+              }
+            });
+        }, 0);
+      }
     });
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
