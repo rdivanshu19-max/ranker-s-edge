@@ -6,10 +6,10 @@ import { RESOURCES } from "@/lib/resources";
 export const Route = createFileRoute("/resources")({
   head: () => ({
     meta: [
-      { title: "Study Resources — Rankers Edge" },
-      { name: "description", content: "Eight hand-picked JEE prep tools — PYQs, chapter tests, mocks, infinite Maths bank and an AI tutor." },
-      { property: "og:title", content: "Study Resources — Rankers Edge" },
-      { property: "og:description", content: "Eight tools, zero noise." },
+      { title: "The Arsenal — Rankers Edge" },
+      { name: "description", content: "Eight battle-tested JEE weapons: endless Maths forge, year-vaulted PYQs, fresh pattern mocks, and a chapter-aware AI mentor." },
+      { property: "og:title", content: "The Arsenal — Rankers Edge" },
+      { property: "og:description", content: "Eight weapons. One ranker." },
     ],
     links: [{ rel: "canonical", href: "/resources" }],
   }),
@@ -20,12 +20,12 @@ function ResourcesPage() {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-20">
       <div className="text-center pt-6">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass text-xs">Study Resources</span>
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass text-xs">The Arsenal</span>
         <h1 className="font-serif text-5xl sm:text-6xl mt-5">
-          Only PYQs. Only practice. <span className="text-gradient italic">Zero noise.</span>
+          Eight weapons. <span className="text-gradient italic">One ranker.</span>
         </h1>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-          Tap any tool to launch it inside Rankers Edge. Your progress is yours.
+          Each tool below opens inside Rankers Edge — no new tabs, no detours. Pick one and start sharpening.
         </p>
       </div>
 
