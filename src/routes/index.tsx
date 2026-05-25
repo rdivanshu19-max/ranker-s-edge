@@ -10,10 +10,10 @@ const HERO_VIDEO =
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Rankers Edge — Where dreams rise through the silence." },
-      { name: "description", content: "Cinematic JEE prep hub for deep thinkers and quiet rebels. PYQs, mocks, infinite Maths bank, and an AI tutor — all in one place." },
-      { property: "og:title", content: "Rankers Edge — Where dreams rise through the silence." },
-      { property: "og:description", content: "Cinematic JEE prep hub. PYQs · Mocks · Infinite Maths · AI Tutor." },
+      { title: "Rankers Edge — JEE prep that fights back." },
+      { name: "description", content: "An obsessive prep cockpit for JEE aspirants. Endless adaptive Maths, year-vaulted PYQs, pattern-true mocks, and a live AI tutor that renders real math." },
+      { property: "og:title", content: "Rankers Edge — JEE prep that fights back." },
+      { property: "og:description", content: "Endless Maths · Year-vault PYQs · Fresh Mocks · Live AI tutor." },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -53,13 +53,13 @@ function Index() {
           <h1
             className="animate-fade-rise font-serif text-5xl sm:text-7xl md:text-8xl mt-6 leading-[0.95] tracking-[-2.46px] max-w-5xl"
           >
-            Where <em className="not-italic text-muted-foreground">dreams</em> rise{" "}
-            <em className="not-italic text-muted-foreground">through the silence.</em>
+            JEE prep that{" "}
+            <em className="not-italic silver-text">fights back.</em>
           </h1>
 
           <p className="animate-fade-rise-delay text-muted-foreground text-base sm:text-lg max-w-2xl mt-8 leading-relaxed">
-            Rankers Edge is built for deep thinkers, bold creators, and quiet rebels.
-            Amid the chaos of coaching, we build digital spaces for sharp focus and inspired practice.
+            An obsessive prep cockpit. Endless adaptive Maths, year-vaulted PYQs, pattern-true mocks,
+            and a live AI tutor that renders real math — not chatty fluff.
           </p>
 
           {/* Cinematic AI search bar */}
@@ -108,12 +108,12 @@ function Index() {
       {/* Resources preview */}
       <section className="mx-auto max-w-6xl px-5 mt-24">
         <div className="text-center">
-          <span className="liquid-glass rounded-full px-3 py-1 text-xs">Eight tools, zero noise</span>
+          <span className="liquid-glass rounded-full px-3 py-1 text-xs">The Arsenal</span>
           <h2 className="font-serif text-4xl sm:text-5xl mt-5">
-            Only PYQs. Only practice. <span className="silver-text italic">Zero noise.</span>
+            Eight weapons. <span className="silver-text italic">One ranker.</span>
           </h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Hand-picked tools that cover every shape of JEE prep — from infinite Maths drills to institute-grade mocks.
+            From an infinite Maths forge to year-vaulted past papers — every tool below is built around one rule: ship the rank.
           </p>
         </div>
         <div className="mt-10 grid sm:grid-cols-2 gap-4">
