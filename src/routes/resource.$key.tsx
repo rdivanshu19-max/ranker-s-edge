@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, ExternalLink } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { getResource } from "@/lib/resources";
 import { trackActivity } from "@/lib/activity.functions";
 
@@ -54,14 +54,9 @@ function ResourcePage() {
             <div className="text-xs text-muted-foreground truncate">{resource.category}</div>
           </div>
         </div>
-        <a
-          href={resource.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
-        >
-          <ExternalLink className="size-3.5" /> Open
-        </a>
+        <span className="text-[10px] uppercase tracking-wider text-muted-foreground/70 hidden sm:inline">
+          powered by Rankers Edge
+        </span>
       </div>
       <div className="relative flex-1 bg-background">
         {!loaded && (
