@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { Send, Brain, ExternalLink, Sparkles } from "lucide-react";
+import { Send, Brain, Sparkles } from "lucide-react";
 import { askTutor } from "@/lib/ai.functions";
 import { trackActivity } from "@/lib/activity.functions";
 import { toast } from "sonner";
@@ -101,28 +101,14 @@ function AITutor() {
         </p>
       </div>
       {provider === "deep" ? (
-        <div className="flex-1 grid place-items-center">
-          <div className="glass rounded-3xl p-8 max-w-md text-center">
-            <Brain className="size-10 mx-auto text-primary" />
-            <h2 className="font-serif text-2xl mt-3">Deep Mentor Workspace</h2>
-            <p className="text-sm text-muted-foreground mt-2">
-              Topic-wise notes, long-form explanations and voice walkthroughs — built for deep dives, not quick lookups.
-            </p>
-            <a
-              href="https://www.acrolly.com/ai-teacher/chapters"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary to-fuchsia-500 text-primary-foreground text-sm"
-            >
-              Enter Deep Mentor <ExternalLink className="size-3.5" />
-            </a>
-            <button
-              onClick={() => setProvider("rankers")}
-              className="block mt-3 mx-auto text-xs text-muted-foreground hover:text-foreground"
-            >
-              Or stay with Rankers AI for quick math →
-            </button>
-          </div>
+        <div className="flex-1 glass rounded-3xl overflow-hidden border border-border/40">
+          <iframe
+            src="https://www.acrolly.com/ai-teacher/chapters"
+            title="Deep Mentor"
+            className="w-full h-full border-0"
+            sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+            referrerPolicy="no-referrer"
+          />
         </div>
       ) : (
       <>
