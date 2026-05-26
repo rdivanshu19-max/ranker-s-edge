@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { Send, Brain, ExternalLink, Sparkles } from "lucide-react";
+import { Send, Brain, Sparkles } from "lucide-react";
 import { askTutor } from "@/lib/ai.functions";
 import { trackActivity } from "@/lib/activity.functions";
 import { toast } from "sonner";
