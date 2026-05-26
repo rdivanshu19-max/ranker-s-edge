@@ -42,9 +42,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }, 0);
       }
     });
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       setSession(data.session);
       setLoading(false);
+      // Also enforce ban on initial load / refresh
+      if (data.session?.user) {
+        const { data: prof } = await supabase
+          .from("profiles")
+          .select("is_banned")
+          .eq("id", data.session.user.id)
+          .maybeSingle();
+        if (prof?.is_banned) {
+          await supabase.auth.signOut();
+          toast.error("This account has been banned.");
+        }
+      }
     });
     return () => sub.subscription.unsubscribe();
   }, []);

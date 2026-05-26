@@ -6,11 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import logoUrl from "/rankers-edge-logo.png?url";
 
 export function SiteNav() {
-  const { user, signOut } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    if (loading) return;
     if (!user) {
       setIsAdmin(false);
       return;
@@ -22,13 +23,15 @@ export function SiteNav() {
       .eq("role", "admin")
       .maybeSingle()
       .then(({ data }) => setIsAdmin(!!data));
-  }, [user]);
+  }, [user, loading]);
 
   return (
     <header className="fixed top-4 left-1/2 z-50 -translate-x-1/2 w-[min(96vw,1200px)]">
       <nav className="liquid-glass rounded-full px-3 sm:px-5 py-2 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 pl-1">
-          <img src={logoUrl} alt="Rankers Edge" className="size-9 object-contain" />
+        <Link to="/" className="flex items-center gap-2 pl-1 group">
+          <span className="relative size-10 grid place-items-center rounded-full bg-gradient-to-br from-primary/30 via-fuchsia-500/15 to-transparent ring-1 ring-white/10 shadow-[0_0_24px_-6px_rgba(180,200,255,0.35)] transition group-hover:shadow-[0_0_32px_-4px_rgba(200,210,255,0.5)]">
+            <img src={logoUrl} alt="Rankers Edge" className="size-7 object-contain drop-shadow-[0_2px_6px_rgba(180,200,255,0.3)]" />
+          </span>
           <span className="font-serif text-xl tracking-tight hidden sm:inline">
             Rankers <span className="silver-text">Edge</span>
             <sup className="text-[10px] ml-0.5 text-muted-foreground">®</sup>
