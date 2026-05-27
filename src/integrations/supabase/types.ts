@@ -38,8 +38,41 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_audit_log: {
+        Row: {
+          action: string
+          actor_user_id: string | null
+          created_at: string
+          id: string
+          metadata: Json
+          reason: string | null
+          target_user_id: string | null
+        }
+        Insert: {
+          action: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          target_user_id?: string | null
+        }
+        Update: {
+          action?: string
+          actor_user_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json
+          reason?: string | null
+          target_user_id?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          ban_reason: string | null
+          banned_at: string | null
+          banned_by: string | null
           created_at: string
           display_name: string | null
           email: string
@@ -48,6 +81,9 @@ export type Database = {
           last_login_at: string | null
         }
         Insert: {
+          ban_reason?: string | null
+          banned_at?: string | null
+          banned_by?: string | null
           created_at?: string
           display_name?: string | null
           email: string
@@ -56,6 +92,9 @@ export type Database = {
           last_login_at?: string | null
         }
         Update: {
+          ban_reason?: string | null
+          banned_at?: string | null
+          banned_by?: string | null
           created_at?: string
           display_name?: string | null
           email?: string
