@@ -34,20 +34,30 @@ export const askTutor = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const apiKey = process.env.LOVABLE_API_KEY;
     if (!apiKey) throw new Error("AI is not configured");
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 25_000);
 
     const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
+      signal: controller.signal,
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-2.5-flash-lite",
+        temperature: 0.25,
+        max_tokens: 1400,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           ...data.messages,
         ],
       }),
+    }).finally(() => clearTimeout(timeout)).catch((error) => {
+      if (error instanceof Error && error.name === "AbortError") {
+        return new Response(JSON.stringify({ error: "timeout" }), { status: 408 });
+      }
+      throw error;
     });
 
     if (res.status === 429) {
