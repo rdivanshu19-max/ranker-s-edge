@@ -60,18 +60,23 @@ function ResourcePage() {
       </div>
       <div className="relative flex-1 bg-background">
         {!loaded && (
-          <div className="absolute inset-0 grid place-items-center text-muted-foreground text-sm">
-            Loading resource…
+          <div className="absolute inset-0 z-10 grid place-items-center bg-background">
+            <div className="flex flex-col items-center gap-3">
+              <div className="size-10 rounded-full border-2 border-primary/40 border-t-primary animate-spin" />
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">Loading {resource.title}…</div>
+            </div>
           </div>
         )}
         <iframe
           src={resource.url}
           title={resource.title}
           onLoad={() => setLoaded(true)}
-          className="w-full h-full border-0"
+          className={`w-full h-full border-0 transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
           sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"
           referrerPolicy="no-referrer"
         />
+        {/* Hide third-party top-left nav chrome (e.g. back button) so only our branded back stays */}
+        <div className="pointer-events-auto absolute top-0 left-0 h-12 w-28 bg-background/95 backdrop-blur-md z-20" aria-hidden />
       </div>
     </div>
   );
