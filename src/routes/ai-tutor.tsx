@@ -1,12 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { Send, Brain, Sparkles } from "lucide-react";
-import { askTutor } from "@/lib/ai.functions";
 import { trackActivity } from "@/lib/activity.functions";
 import { toast } from "sonner";
 
@@ -28,13 +26,13 @@ export const Route = createFileRoute("/ai-tutor")({
 
 function AITutor() {
   const { q } = Route.useSearch();
-  const ask = useServerFn(askTutor);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState(q);
   const [busy, setBusy] = useState(false);
   const [provider, setProvider] = useState<"rankers" | "deep">("rankers");
   const sentInitial = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     trackActivity("ai-tutor", "/ai-tutor");
@@ -44,6 +42,75 @@ function AITutor() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, busy]);
 
+  const streamReply = async (history: Msg[], attempt = 0): Promise<void> => {
+    const controller = new AbortController();
+    abortRef.current = controller;
+    try {
+      const resp = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+        signal: controller.signal,
+      });
+      if (!resp.ok || !resp.body) {
+        let msg = "AI service error.";
+        try {
+          const j = await resp.json();
+          if (j?.error) msg = j.error;
+        } catch {/* ignore */}
+        if ((resp.status >= 500 || resp.status === 429) && attempt < 2) {
+          await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+          return streamReply(history, attempt + 1);
+        }
+        throw new Error(msg);
+      }
+
+      // Open assistant bubble
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = "";
+      let assistant = "";
+      let done = false;
+      while (!done) {
+        const { done: d, value } = await reader.read();
+        if (d) break;
+        buf += decoder.decode(value, { stream: true });
+        let idx: number;
+        while ((idx = buf.indexOf("\n")) !== -1) {
+          let line = buf.slice(0, idx);
+          buf = buf.slice(idx + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") { done = true; break; }
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const delta = parsed.choices?.[0]?.delta?.content;
+            if (typeof delta === "string" && delta) {
+              assistant += delta;
+              setMessages((prev) => {
+                const next = prev.slice();
+                next[next.length - 1] = { role: "assistant", content: assistant };
+                return next;
+              });
+            }
+          } catch {
+            buf = line + "\n" + buf;
+            break;
+          }
+        }
+      }
+      if (!assistant) {
+        setMessages((prev) => prev.slice(0, -1));
+        throw new Error("Empty response. Try again.");
+      }
+    } finally {
+      abortRef.current = null;
+    }
+  };
+
   const send = async (text: string) => {
     if (!text.trim() || busy) return;
     const next: Msg[] = [...messages, { role: "user", content: text }];
@@ -51,12 +118,7 @@ function AITutor() {
     setInput("");
     setBusy(true);
     try {
-      const res = await ask({ data: { messages: next } });
-      if (!res.ok) {
-        toast.error(res.error);
-        return;
-      }
-      setMessages([...next, { role: "assistant", content: res.content }]);
+      await streamReply(next);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed");
     } finally {
@@ -101,7 +163,7 @@ function AITutor() {
         </p>
       </div>
       {provider === "deep" ? (
-        <div className="flex-1 glass rounded-3xl overflow-hidden border border-border/40">
+        <div className="flex-1 glass rounded-3xl overflow-hidden border border-border/40 relative">
           <iframe
             src="https://www.acrolly.com/ai-teacher/chapters"
             title="Deep Mentor"
@@ -109,6 +171,10 @@ function AITutor() {
             sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
             referrerPolicy="no-referrer"
           />
+          {/* Mask Acrolly's own back/nav chrome so only our Rankers Edge back button is visible */}
+          <div className="pointer-events-auto absolute top-0 left-0 h-14 w-32 bg-background/95 backdrop-blur-md flex items-center pl-3 text-xs text-muted-foreground select-none">
+            <span className="silver-text font-medium">Rankers Edge</span>
+          </div>
         </div>
       ) : (
       <>
