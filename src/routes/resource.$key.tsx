@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { getResource } from "@/lib/resources";
+import { getAnyResource as getResource } from "@/lib/resources";
 import { trackActivity } from "@/lib/activity.functions";
 
 export const Route = createFileRoute("/resource/$key")({

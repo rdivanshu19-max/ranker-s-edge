@@ -9,7 +9,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const staticPaths = ["/", "/resources", "/ai-tutor", "/about"];
+        const staticPaths = ["/", "/resources", "/ai-tutor", "/test-series", "/test-series/mathango-qfts"];
         const dynamicPaths = RESOURCES.map((r) => `/resource/${r.key}`);
         const urls = [...staticPaths, ...dynamicPaths]
           .map(
