@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (s: Record<string, unknown>) => ({ redirect: (s.redirect as string) ?? "/" }),
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => ({ redirect: (s.redirect as string) || undefined }),
   component: LoginPage,
 });
 

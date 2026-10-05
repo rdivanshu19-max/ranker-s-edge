@@ -11,7 +11,7 @@ import { toast } from "sonner";
 type Msg = { role: "user" | "assistant"; content: string };
 
 export const Route = createFileRoute("/ai-tutor")({
-  validateSearch: (s: Record<string, unknown>) => ({ q: (s.q as string) ?? "" }),
+  validateSearch: (s: Record<string, unknown>): { q?: string } => ({ q: (s.q as string) || undefined }),
   head: () => ({
     meta: [
       { title: "AI Tutor — Rankers Edge" },

@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Rankers Edge — Where dreams rise through the silence." },
       { name: "description", content: "Rankers Edge is a cinematic JEE prep hub — PYQs, chapter mocks, an infinite Maths bank and an AI tutor. Built for deep thinkers and quiet rebels." },
-      { name: "author", content: "GCD" },
+      
       { name: "theme-color", content: "#031a33" },
       { property: "og:title", content: "Rankers Edge — Where dreams rise through the silence." },
       { property: "og:description", content: "Rankers Edge is a cinematic JEE prep hub — PYQs, chapter mocks, an infinite Maths bank and an AI tutor. Built for deep thinkers and quiet rebels." },
@@ -110,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
-  errorComponent: ErrorComponent,
+  errorComponent: ErrorComponent as any,
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {

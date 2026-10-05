@@ -52,10 +52,10 @@ export function SiteNav() {
             AI Tutor
           </Link>
           <Link
-            to="/about"
+            to="/test-series"
             className="px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground transition"
           >
-            About
+            Tests
           </Link>
           {isAdmin && (
             <Link
@@ -98,11 +98,10 @@ export function SiteFooter() {
         <div className="flex items-center gap-2">
           <img src={logoUrl} alt="" className="size-7 object-contain" />
           <span>
-            Rankers <span className="silver-text font-medium">Edge</span> · Built by aspirants, for aspirants
+            Rankers <span className="silver-text font-medium">Edge</span>
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <Link to="/about" className="hover:text-foreground">About</Link>
           <Link to="/resources" className="hover:text-foreground">Resources</Link>
           <Link to="/ai-tutor" className="hover:text-foreground">AI Tutor</Link>
           <a href="mailto:studyspacerankers@gmail.com" className="hover:text-foreground">Contact</a>

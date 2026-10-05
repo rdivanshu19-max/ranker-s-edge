@@ -15,8 +15,9 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AiTutorRouteImport } from './routes/ai-tutor'
 import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestSeriesIndexRouteImport } from './routes/test-series.index'
+import { Route as TestSeriesMathangoQftsRouteImport } from './routes/test-series.mathango-qfts'
 import { Route as ResourceKeyRouteImport } from './routes/resource.$key'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -49,14 +50,19 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestSeriesIndexRoute = TestSeriesIndexRouteImport.update({
+  id: '/test-series/',
+  path: '/test-series/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestSeriesMathangoQftsRoute = TestSeriesMathangoQftsRouteImport.update({
+  id: '/test-series/mathango-qfts',
+  path: '/test-series/mathango-qfts',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResourceKeyRoute = ResourceKeyRouteImport.update({
@@ -67,7 +73,6 @@ const ResourceKeyRoute = ResourceKeyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/ai-tutor': typeof AiTutorRoute
   '/login': typeof LoginRoute
@@ -75,10 +80,11 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resource/$key': typeof ResourceKeyRoute
+  '/test-series/mathango-qfts': typeof TestSeriesMathangoQftsRoute
+  '/test-series/': typeof TestSeriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/ai-tutor': typeof AiTutorRoute
   '/login': typeof LoginRoute
@@ -86,11 +92,12 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resource/$key': typeof ResourceKeyRoute
+  '/test-series/mathango-qfts': typeof TestSeriesMathangoQftsRoute
+  '/test-series': typeof TestSeriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/ai-tutor': typeof AiTutorRoute
   '/login': typeof LoginRoute
@@ -98,12 +105,13 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resource/$key': typeof ResourceKeyRoute
+  '/test-series/mathango-qfts': typeof TestSeriesMathangoQftsRoute
+  '/test-series/': typeof TestSeriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/admin'
     | '/ai-tutor'
     | '/login'
@@ -111,10 +119,11 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/resource/$key'
+    | '/test-series/mathango-qfts'
+    | '/test-series/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/admin'
     | '/ai-tutor'
     | '/login'
@@ -122,10 +131,11 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/resource/$key'
+    | '/test-series/mathango-qfts'
+    | '/test-series'
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/admin'
     | '/ai-tutor'
     | '/login'
@@ -133,11 +143,12 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/resource/$key'
+    | '/test-series/mathango-qfts'
+    | '/test-series/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AiTutorRoute: typeof AiTutorRoute
   LoginRoute: typeof LoginRoute
@@ -145,6 +156,8 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ResourceKeyRoute: typeof ResourceKeyRoute
+  TestSeriesMathangoQftsRoute: typeof TestSeriesMathangoQftsRoute
+  TestSeriesIndexRoute: typeof TestSeriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,18 +204,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-series/': {
+      id: '/test-series/'
+      path: '/test-series'
+      fullPath: '/test-series/'
+      preLoaderRoute: typeof TestSeriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-series/mathango-qfts': {
+      id: '/test-series/mathango-qfts'
+      path: '/test-series/mathango-qfts'
+      fullPath: '/test-series/mathango-qfts'
+      preLoaderRoute: typeof TestSeriesMathangoQftsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/resource/$key': {
@@ -217,7 +237,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AiTutorRoute: AiTutorRoute,
   LoginRoute: LoginRoute,
@@ -225,7 +244,19 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ResourceKeyRoute: ResourceKeyRoute,
+  TestSeriesMathangoQftsRoute: TestSeriesMathangoQftsRoute,
+  TestSeriesIndexRoute: TestSeriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

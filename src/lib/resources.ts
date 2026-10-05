@@ -95,3 +95,67 @@ export const RESOURCES: Resource[] = [
 export function getResource(key: string): Resource | undefined {
   return RESOURCES.find((r) => r.key === key);
 }
+export type SeriesItem = { key: string; title: string; url: string };
+export type Series = { key: string; title: string; tagline: string; items: SeriesItem[] };
+
+export const TEST_SERIES: Series[] = [
+  {
+    key: "allen",
+    title: "ALLEN Test Series",
+    tagline: "Batch-wise ALLEN folders — Nurture, Enthuse and Leader papers.",
+    items: [
+      { key: "allen-nurture-2026", title: "Nurture 2026", url: "https://pikachu-jee-cbt.vercel.app/?view=tests&batch=nurture-2026-434306f7cb" },
+      { key: "allen-nurture-2025", title: "Nurture 2025", url: "https://pikachu-jee-cbt.vercel.app/?view=tests&batch=nurture-2025-231a3dabc1" },
+      { key: "allen-enthuse-2025", title: "Enthuse 2025", url: "https://pikachu-jee-cbt.vercel.app/?view=tests&batch=enthuse-2025-de6797c69c" },
+      { key: "allen-enthuse-2026-delhi", title: "Enthuse 2026 (Delhi)", url: "https://pikachu-jee-cbt.vercel.app/?view=tests&batch=enthuse-2026-delhi-1416355017" },
+      { key: "allen-leader-2026", title: "Leader 2026", url: "https://pikachu-jee-cbt.vercel.app/?view=tests&batch=leader-2026-d323d9be0d" },
+    ],
+  },
+  {
+    key: "mathango",
+    title: "Mathango Test Series",
+    tagline: "Class 12th, dropper and Advanced series in one shelf.",
+    items: [
+      { key: "mathango-12th-2027", title: "12th JEE 2027", url: "https://ruhvan.indevs.in/library?tab=JEE%20Main" },
+      { key: "mathango-dropper-2027", title: "Dropper JEE 2027", url: "https://ruhvan.indevs.in/tests?src=qpt" },
+      { key: "mathango-adv-2026", title: "JEE Advanced 2026", url: "https://ruhvan.indevs.in/tests?src=adv" },
+      { key: "mathango-dropper-2026", title: "Dropper 2026", url: "https://ruhvan.indevs.in/tests?src=dropper" },
+      { key: "mathango-12th-2026", title: "12th 2026", url: "https://ruhvan.indevs.in/tests?src=12th" },
+    ],
+  },
+  {
+    key: "pw",
+    title: "PW Test Series",
+    tagline: "Physics Wallah full test series, opened right here.",
+    items: [{ key: "pw-tests", title: "PW Test Series", url: "https://ruhvan.indevs.in/uw-tests" }],
+  },
+];
+
+const SERIES_RESOURCES: Resource[] = TEST_SERIES.flatMap((s) =>
+  s.items.map((i) => ({
+    key: i.key,
+    title: i.title,
+    badge: s.title.split(" ")[0].toUpperCase(),
+    category: s.title,
+    description: s.tagline,
+    url: i.url,
+    icon: "Folder",
+    gradient: "from-sky-500/20 to-violet-500/10",
+  })),
+);
+
+export function getAnyResource(key: string): Resource | undefined {
+  return RESOURCES.find((r) => r.key === key) ?? SERIES_RESOURCES.find((r) => r.key === key);
+}
+
+/** Mathango QFT papers. Paper 1 is open from launch; each following paper unlocks on the next Sunday. */
+export const QFT_LAUNCH = new Date("2026-10-05T00:00:00+05:30");
+export const QFTS = [1, 2, 3, 4, 5, 6].map((n) => ({ n, title: `QFT ${n} · Full Syllabus`, url: `/qft/${n}.html` }));
+
+export function qftUnlockDate(n: number): Date {
+  if (n === 1) return QFT_LAUNCH;
+  const d = new Date(QFT_LAUNCH);
+  const toSunday = (7 - d.getDay()) % 7 || 7;
+  d.setDate(d.getDate() + toSunday + 7 * (n - 2));
+  return d;
+}

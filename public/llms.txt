@@ -8,7 +8,7 @@ Rankers Edge is a focused study platform for JEE Mains and JEE Advanced aspirant
 - [Home](/): Cinematic landing with an AI tutor search bar.
 - [Study Resources](/resources): Eight hand-picked JEE prep tools.
 - [AI Tutor](/ai-tutor): Ask any JEE concept, problem or derivation.
-- [About Developer](/about): The story behind Rankers Edge and the developer's other platforms.
+- [Test Series](/test-series): ALLEN, Mathango and PW test series folders plus weekly-unlocking Mathango QFTs.
 
 ## Resources
 - [Infinity Question Bank](/resource/infinity-maths): Never-ending adaptive Maths drills.
