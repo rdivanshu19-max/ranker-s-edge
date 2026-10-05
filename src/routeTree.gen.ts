@@ -9,40 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ResourcesRouteImport } from './routes/resources'
-import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as AiTutorRouteImport } from './routes/ai-tutor'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AiTutorRouteImport } from './routes/ai-tutor'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ResourceKeyRouteImport } from './routes/resource.$key'
 import { Route as TestSeriesIndexRouteImport } from './routes/test-series.index'
 import { Route as TestSeriesMathangoQftsRouteImport } from './routes/test-series.mathango-qfts'
-import { Route as ResourceKeyRouteImport } from './routes/resource.$key'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResourcesRoute = ResourcesRouteImport.update({
-  id: '/resources',
-  path: '/resources',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiTutorRoute = AiTutorRouteImport.update({
-  id: '/ai-tutor',
-  path: '/ai-tutor',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -50,9 +30,34 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AiTutorRoute = AiTutorRouteImport.update({
+  id: '/ai-tutor',
+  path: '/ai-tutor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourceKeyRoute = ResourceKeyRouteImport.update({
+  id: '/resource/$key',
+  path: '/resource/$key',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TestSeriesIndexRoute = TestSeriesIndexRouteImport.update({
@@ -63,11 +68,6 @@ const TestSeriesIndexRoute = TestSeriesIndexRouteImport.update({
 const TestSeriesMathangoQftsRoute = TestSeriesMathangoQftsRouteImport.update({
   id: '/test-series/mathango-qfts',
   path: '/test-series/mathango-qfts',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResourceKeyRoute = ResourceKeyRouteImport.update({
-  id: '/resource/$key',
-  path: '/resource/$key',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -162,39 +162,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resources': {
-      id: '/resources'
-      path: '/resources'
-      fullPath: '/resources'
-      preLoaderRoute: typeof ResourcesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai-tutor': {
-      id: '/ai-tutor'
-      path: '/ai-tutor'
-      fullPath: '/ai-tutor'
-      preLoaderRoute: typeof AiTutorRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -204,11 +176,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/ai-tutor': {
+      id: '/ai-tutor'
+      path: '/ai-tutor'
+      fullPath: '/ai-tutor'
+      preLoaderRoute: typeof AiTutorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resource/$key': {
+      id: '/resource/$key'
+      path: '/resource/$key'
+      fullPath: '/resource/$key'
+      preLoaderRoute: typeof ResourceKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/test-series/': {
@@ -223,13 +230,6 @@ declare module '@tanstack/react-router' {
       path: '/test-series/mathango-qfts'
       fullPath: '/test-series/mathango-qfts'
       preLoaderRoute: typeof TestSeriesMathangoQftsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resource/$key': {
-      id: '/resource/$key'
-      path: '/resource/$key'
-      fullPath: '/resource/$key'
-      preLoaderRoute: typeof ResourceKeyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
