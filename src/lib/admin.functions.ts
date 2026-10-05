@@ -1,17 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
-
-const adminDb = supabaseAdmin as any;
-
-async function assertAdmin(userId: string) {
-  const { data, error } = await supabaseAdmin
-    .from("user_roles")
-    .select("role")
-    .eq("user_id", userId)
-    .eq("role", "admin")
-    .maybeSingle();
+async function assertAdmin(sb: any, userId: string) {
+  const { data, error } = await sb.rpc("has_role", { _user_id: userId, _role: "admin" });
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Forbidden: admin only");
 }
@@ -19,15 +10,16 @@ async function assertAdmin(userId: string) {
 export const listUsers = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.userId);
+    await assertAdmin(context.supabase, context.userId);
+    const adminDb = context.supabase as any;
     const { data: profiles, error } = await adminDb
       .from("profiles")
       .select("id, email, display_name, is_banned, ban_reason, banned_at, banned_by, last_login_at, created_at")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id, role");
+    const { data: roles } = await adminDb.from("user_roles").select("user_id, role");
     const roleByUser = new Map<string, string[]>();
-    (roles ?? []).forEach((r) => {
+    (roles ?? []).forEach((r: any) => {
       const arr = roleByUser.get(r.user_id) ?? [];
       arr.push(r.role);
       roleByUser.set(r.user_id, arr);
@@ -44,7 +36,8 @@ export const setUserBanned = createServerFn({ method: "POST" })
     z.object({ user_id: z.string().uuid(), banned: z.boolean(), reason: z.string().max(500).optional() }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.userId);
+    await assertAdmin(context.supabase, context.userId);
+    const adminDb = context.supabase as any;
     const reason = data.reason?.trim() || null;
     const { error } = await adminDb
       .from("profiles")
@@ -65,7 +58,10 @@ export const setUserBanned = createServerFn({ method: "POST" })
     });
     // also sign out all sessions when banned
     if (data.banned) {
-      await supabaseAdmin.auth.admin.signOut(data.user_id).catch(() => {});
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        await supabaseAdmin.auth.admin.signOut(data.user_id);
+      } catch {}
     }
     return { ok: true };
   });
@@ -74,7 +70,8 @@ export const deleteUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) => z.object({ user_id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.userId);
+    await assertAdmin(context.supabase, context.userId);
+    const adminDb = context.supabase as any;
     if (data.user_id === context.userId) throw new Error("Cannot delete yourself");
     await adminDb.from("admin_audit_log").insert({
       actor_user_id: context.userId,
@@ -82,6 +79,7 @@ export const deleteUser = createServerFn({ method: "POST" })
       action: "delete_user",
       metadata: {},
     });
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.auth.admin.deleteUser(data.user_id);
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -93,22 +91,23 @@ export const listActivity = createServerFn({ method: "GET" })
     z.object({ limit: z.number().min(1).max(500).default(100) }).parse(input ?? {}),
   )
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.userId);
-    const { data: rows, error } = await supabaseAdmin
+    await assertAdmin(context.supabase, context.userId);
+    const adminDb = context.supabase as any;
+    const { data: rows, error } = await adminDb
       .from("activity_log")
       .select("id, user_id, resource_key, path, created_at")
       .order("created_at", { ascending: false })
       .limit(data.limit);
     if (error) throw new Error(error.message);
     const ids = Array.from(
-      new Set((rows ?? []).map((r) => r.user_id).filter((x): x is string => !!x)),
+      new Set((rows ?? []).map((r: any) => r.user_id).filter((x: any): x is string => !!x)),
     );
-    const { data: profs } = await supabaseAdmin
+    const { data: profs } = await adminDb
       .from("profiles")
       .select("id, email")
       .in("id", ids.length ? ids : ["00000000-0000-0000-0000-000000000000"]);
-    const emailById = new Map((profs ?? []).map((p) => [p.id, p.email]));
-    return (rows ?? []).map((r) => ({
+    const emailById = new Map((profs ?? []).map((p: any) => [p.id, p.email]));
+    return (rows ?? []).map((r: any) => ({
       ...r,
       email: r.user_id ? emailById.get(r.user_id) ?? "—" : "Anonymous",
     }));
@@ -120,7 +119,8 @@ export const listAuditLog = createServerFn({ method: "GET" })
     z.object({ user_id: z.string().uuid().optional(), limit: z.number().min(1).max(1000).default(500) }).parse(input ?? {}),
   )
   .handler(async ({ data, context }) => {
-    await assertAdmin(context.userId);
+    await assertAdmin(context.supabase, context.userId);
+    const adminDb = context.supabase as any;
     let q = adminDb
       .from("admin_audit_log")
       .select("id, actor_user_id, target_user_id, action, reason, metadata, created_at")
