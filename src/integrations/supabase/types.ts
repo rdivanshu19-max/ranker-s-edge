@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_codes: {
+        Row: {
+          code: string
+          created_at: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       activity_log: {
         Row: {
           created_at: string
@@ -65,6 +80,21 @@ export type Database = {
           metadata?: Json
           reason?: string | null
           target_user_id?: string | null
+        }
+        Relationships: []
+      }
+      early_access: {
+        Row: {
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -137,6 +167,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      redeem_access_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "user"
