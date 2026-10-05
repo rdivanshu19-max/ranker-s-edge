@@ -22,10 +22,14 @@ export const Route = createFileRoute("/resource/$key")({
   component: ResourcePage,
 });
 
+const CROP = 64;
+
 function ResourcePage() {
   const { key } = Route.useParams();
   const resource = getResource(key);
   const [loaded, setLoaded] = useState(false);
+  // Crop the embedded site's own top bar (with its back button) cleanly out of view
+  const crop = !!resource?.url.includes("acrolly.com");
 
   useEffect(() => {
     if (resource) trackActivity(resource.key, resource.url);
@@ -67,16 +71,17 @@ function ResourcePage() {
             </div>
           </div>
         )}
+        <div className="absolute inset-0 overflow-hidden">
         <iframe
           src={resource.url}
           title={resource.title}
           onLoad={() => setLoaded(true)}
+          style={crop ? { height: `calc(100% + ${CROP}px)`, marginTop: -CROP } : undefined}
           className={`w-full h-full border-0 transition-opacity duration-500 ${loaded ? "opacity-100" : "opacity-0"}`}
           sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"
           referrerPolicy="no-referrer"
         />
-        {/* Hide third-party top-left nav chrome (e.g. back button) so only our branded back stays */}
-        <div className="pointer-events-auto absolute top-0 left-0 h-12 w-28 bg-background/95 backdrop-blur-md z-20" aria-hidden />
+        </div>
       </div>
     </div>
   );
