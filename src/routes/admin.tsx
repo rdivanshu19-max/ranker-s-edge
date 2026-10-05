@@ -45,8 +45,8 @@ function AdminPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle()
-      .then(({ data }) => setIsAdmin(!!data));
+    supabase.rpc("has_role", { _user_id: user.id, _role: "admin" })
+      .then(({ data, error }) => setIsAdmin(!error && !!data));
   }, [user]);
 
   if (loading || !user || isAdmin === null) return <div className="py-20 text-center text-muted-foreground">Loading…</div>;
@@ -131,6 +131,19 @@ function UsersTab() {
 
   return (
     <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {[
+          ["Total users", rows.length],
+          ["Active", rows.filter((u) => !u.is_banned).length],
+          ["Banned", rows.filter((u) => u.is_banned).length],
+          ["Joined 7d", rows.filter((u) => Date.now() - new Date(u.created_at).getTime() < 7 * 864e5).length],
+        ].map(([l, v]) => (
+          <div key={l as string} className="liquid-glass rounded-2xl p-4">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">{l}</div>
+            <div className="mt-1 font-serif text-3xl">{v}</div>
+          </div>
+        ))}
+      </div>
       <div className="liquid-glass flex flex-wrap items-center gap-2 rounded-2xl p-3">
         <div className="flex min-w-[200px] flex-1 items-center gap-2 rounded-xl bg-input/40 px-3 py-1.5">
           <Search className="size-4 text-muted-foreground" />
