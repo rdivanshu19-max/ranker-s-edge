@@ -51,6 +51,12 @@ export function SiteNav() {
           >
             AI Tutor
           </Link>
+          <Link
+            to="/test-series"
+            className="px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground transition"
+          >
+            Tests
+          </Link>
           {isAdmin && (
             <Link
               to="/admin"

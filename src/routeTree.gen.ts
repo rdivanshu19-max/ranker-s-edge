@@ -16,6 +16,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AiTutorRouteImport } from './routes/ai-tutor'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TestSeriesIndexRouteImport } from './routes/test-series.index'
+import { Route as TestSeriesMathangoQftsRouteImport } from './routes/test-series.mathango-qfts'
 import { Route as ResourceKeyRouteImport } from './routes/resource.$key'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -53,6 +55,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TestSeriesIndexRoute = TestSeriesIndexRouteImport.update({
+  id: '/test-series/',
+  path: '/test-series/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestSeriesMathangoQftsRoute = TestSeriesMathangoQftsRouteImport.update({
+  id: '/test-series/mathango-qfts',
+  path: '/test-series/mathango-qfts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResourceKeyRoute = ResourceKeyRouteImport.update({
   id: '/resource/$key',
   path: '/resource/$key',
@@ -68,6 +80,8 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resource/$key': typeof ResourceKeyRoute
+  '/test-series/mathango-qfts': typeof TestSeriesMathangoQftsRoute
+  '/test-series/': typeof TestSeriesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +92,8 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resource/$key': typeof ResourceKeyRoute
+  '/test-series/mathango-qfts': typeof TestSeriesMathangoQftsRoute
+  '/test-series': typeof TestSeriesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +105,8 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/resource/$key': typeof ResourceKeyRoute
+  '/test-series/mathango-qfts': typeof TestSeriesMathangoQftsRoute
+  '/test-series/': typeof TestSeriesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +119,8 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/resource/$key'
+    | '/test-series/mathango-qfts'
+    | '/test-series/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +131,8 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/resource/$key'
+    | '/test-series/mathango-qfts'
+    | '/test-series'
   id:
     | '__root__'
     | '/'
@@ -121,6 +143,8 @@ export interface FileRouteTypes {
     | '/resources'
     | '/sitemap.xml'
     | '/resource/$key'
+    | '/test-series/mathango-qfts'
+    | '/test-series/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +156,8 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   ResourceKeyRoute: typeof ResourceKeyRoute
+  TestSeriesMathangoQftsRoute: typeof TestSeriesMathangoQftsRoute
+  TestSeriesIndexRoute: typeof TestSeriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -185,6 +211,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/test-series/': {
+      id: '/test-series/'
+      path: '/test-series'
+      fullPath: '/test-series/'
+      preLoaderRoute: typeof TestSeriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-series/mathango-qfts': {
+      id: '/test-series/mathango-qfts'
+      path: '/test-series/mathango-qfts'
+      fullPath: '/test-series/mathango-qfts'
+      preLoaderRoute: typeof TestSeriesMathangoQftsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resource/$key': {
       id: '/resource/$key'
       path: '/resource/$key'
@@ -204,6 +244,8 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   ResourceKeyRoute: ResourceKeyRoute,
+  TestSeriesMathangoQftsRoute: TestSeriesMathangoQftsRoute,
+  TestSeriesIndexRoute: TestSeriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
