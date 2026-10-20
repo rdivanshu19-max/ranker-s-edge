@@ -27,7 +27,7 @@ export const Route = createFileRoute("/ai-tutor")({
 function AITutor() {
   const { q } = Route.useSearch();
   const [messages, setMessages] = useState<Msg[]>([]);
-  const [input, setInput] = useState(q);
+  const [input, setInput] = useState(q ?? "");
   const [busy, setBusy] = useState(false);
   const [provider, setProvider] = useState<"rankers" | "deep">("rankers");
   const sentInitial = useRef(false);
