@@ -98,6 +98,54 @@ export type Database = {
         }
         Relationships: []
       }
+      paper_attempts: {
+        Row: {
+          attempted: number
+          correct: number
+          created_at: string
+          id: string
+          paper_key: string
+          paper_title: string
+          score: number | null
+          source: string
+          subjects: Json
+          time_spent_seconds: number
+          total_questions: number
+          user_id: string
+          wrong: number
+        }
+        Insert: {
+          attempted?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          paper_key: string
+          paper_title: string
+          score?: number | null
+          source?: string
+          subjects?: Json
+          time_spent_seconds?: number
+          total_questions?: number
+          user_id: string
+          wrong?: number
+        }
+        Update: {
+          attempted?: number
+          correct?: number
+          created_at?: string
+          id?: string
+          paper_key?: string
+          paper_title?: string
+          score?: number | null
+          source?: string
+          subjects?: Json
+          time_spent_seconds?: number
+          total_questions?: number
+          user_id?: string
+          wrong?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           ban_reason: string | null
@@ -131,6 +179,39 @@ export type Database = {
           id?: string
           is_banned?: boolean
           last_login_at?: string | null
+        }
+        Relationships: []
+      }
+      study_sessions: {
+        Row: {
+          day: string
+          id: string
+          paper_key: string
+          paper_title: string
+          seconds: number
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          id?: string
+          paper_key: string
+          paper_title: string
+          seconds?: number
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          day?: string
+          id?: string
+          paper_key?: string
+          paper_title?: string
+          seconds?: number
+          source?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
