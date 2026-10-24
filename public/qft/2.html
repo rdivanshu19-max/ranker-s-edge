@@ -642,5 +642,35 @@ renderQ();
 updateScore();
 startTimer();
 </script>
+<script>
+(function(){
+  var PAPER_NO=2;
+  var TOTAL=10800;
+  var sent=false;
+  function report(){
+    try{
+      if(sent) return;
+      if(typeof S==='undefined'||!S||!S.submitted||typeof QS==='undefined'||typeof AK==='undefined') return;
+      var att=0,co=0,wr=0,tot=0,sd={};
+      QS.forEach(function(q){
+        var r=S.resp[q.id]; if(r===undefined) return; att++;
+        var a=AK[q.id];
+        var ok=(q.sec==='scq')?(r===a):(String(r)===String(a));
+        var s=ok?4:(q.sec==='scq'?-1:0); tot+=s;
+        if(ok)co++; else wr++;
+        sd[q.sub]=sd[q.sub]||{score:0,correct:0,wrong:0};
+        sd[q.sub].score+=s; if(ok)sd[q.sub].correct++; else sd[q.sub].wrong++;
+      });
+      sent=true;
+      parent.postMessage({type:'qft-result',paper:PAPER_NO,score:tot,attempted:att,correct:co,wrong:wr,total:QS.length,subjects:sd,time_spent_seconds:Math.max(0,Math.min(TOTAL,TOTAL-(S.timeLeft||0)))},'*');
+    }catch(e){ console.warn('ledger report failed',e); }
+  }
+  if(typeof doSubmit==='function'){
+    var orig=doSubmit;
+    doSubmit=function(){ var r=orig.apply(this,arguments); setTimeout(report,250); return r; };
+  }
+  setInterval(function(){ if(typeof S!=='undefined'&&S&&S.submitted) report(); },2000);
+})();
+</script>
 </body>
 </html>

@@ -159,3 +159,21 @@ export function qftUnlockDate(n: number): Date {
   d.setDate(d.getDate() + toSunday + 7 * (n - 2));
   return d;
 }
+
+/** Every test paper across all series plus the weekly QFTs — used by the Rank Ledger and admin oversight. */
+export type PaperRef = { key: string; title: string; source: "qft" | "series"; url: string; unlockAt: Date | null };
+
+export function allPapers(): PaperRef[] {
+  return [
+    ...TEST_SERIES.flatMap((s) =>
+      s.items.map((i) => ({ key: i.key, title: i.title, source: "series" as const, url: i.url, unlockAt: null })),
+    ),
+    ...QFTS.map((q) => ({
+      key: `qft-${q.n}`,
+      title: q.title,
+      source: "qft" as const,
+      url: q.url,
+      unlockAt: qftUnlockDate(q.n),
+    })),
+  ];
+}
